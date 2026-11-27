@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{%- assign mod = page.path | split: '/' | first -%}
+{%- assign mods = "core,kindred,garou,imbued,awakened,fera" | split: "," -%}
+{%- unless mods contains mod %}{% assign mod = "home" %}{% endunless -%}
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if page.title and page.title != site.title %}{{ page.title | strip_html }} · {% endif %}The Rim by Night</title>
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+</head>
+<body class="mod-{{ mod }}">
+<header class="top">
+  <a class="brand" href="{{ '/' | relative_url }}">The Rim <span>by</span> Night</a>
+  <nav class="mods">
+    <a class="kindred{% if mod == 'kindred' %} on{% endif %}" href="{{ '/kindred/' | relative_url }}">Kindred</a>
+    <a class="garou{% if mod == 'garou' %} on{% endif %}" href="{{ '/garou/' | relative_url }}">Garou</a>
+    <a class="imbued{% if mod == 'imbued' %} on{% endif %}" href="{{ '/imbued/' | relative_url }}">Imbued</a>
+    <a class="awakened{% if mod == 'awakened' %} on{% endif %}" href="{{ '/awakened/' | relative_url }}">Awakened</a>
+    <a class="fera{% if mod == 'fera' %} on{% endif %}" href="{{ '/fera/' | relative_url }}">Fera <small>unreleased</small></a>
+    <a class="core{% if mod == 'core' %} on{% endif %}" href="{{ '/core/' | relative_url }}">Core</a>
+  </nav>
+  <div class="search">
+    <label class="find"><span class="hide">Search the wiki</span>
+      <input type="search" id="q" placeholder="Search" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="hits"></label>
+    <div class="hits" id="hits" role="listbox" hidden></div>
+  </div>
+  <button class="search-button" onclick="document.body.classList.toggle('searching');document.getElementById('q').focus()" aria-label="Search">
+    <svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></button>
+  {% if mod != "home" %}<button class="menu" onclick="document.body.classList.toggle('open')" aria-label="Pages">☰</button>{% endif %}
+</header>
+<div class="wrap">
+  {% if mod != "home" %}
+  {%- assign nav = "nav-" | append: mod | append: ".html" -%}
+  <aside class="side">{% include {{ nav }} %}</aside>
+  {% endif %}
+  <main class="page">
+{% if mod == "fera" %}<div class="unreleased">Fera is not released yet. It's built, but not on the Steam Workshop; what these pages describe may still change.</div>{% endif %}
+{% if mod != "home" and page.name != "README.md" %}<div class="crumbs"><a href="./">{{ mod | capitalize }}</a> › {{ page.title | strip_html }}</div>{% endif %}
+{{ content }}
+  </main>
+  <aside class="toc" hidden><h4>On this page</h4></aside>
+</div>
+<script>window.wikiRoot = "{{ '/' | relative_url }}"; window.wikiBuild = "{{ site.time | date: '%s' }}";</script>
+<script src="{{ '/assets/wiki.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+</body>
+</html>
